@@ -11,6 +11,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
   // Destructuring and hooks
   const [movies, setMovies] = useState([]);
   const [trailerUrl, setTrailerUrl] = useState("");
+  const [visible, setVisible] = useState(false);
 
   // A snippet of code which rans based on a specific condition/variable
   useEffect(() => {
@@ -20,6 +21,7 @@ function Row({ title, fetchUrl, isLargeRow }) {
       const request = await axios.get(fetchUrl);
       // "https://api.themoviedb.org/3/discover/tv?api-key=${API_KEY}&with_networks=213"
       setMovies(request.data.results);
+      setVisible(true);
       return request;
     }
     fetchData();
@@ -50,22 +52,32 @@ function Row({ title, fetchUrl, isLargeRow }) {
 
   return (
     <div className="row">
-      <h2> {title} </h2>
-      <div className="row__posters">
-        {movies.map((movie) => (
-          <img
-            key={movie.id}
-            onClick={() => handleClick(movie)}
-            className={`row__poster ${isLargeRow && "row__posterLarge"}`} // if there's isLargeRow prop, apply posterLarge instead of poster_path
-            src={`${base_url}${
-              isLargeRow ? movie.poster_path : movie.backdrop_path
-            } `}
-            alt={movie.name}
-          />
-        ))}
-      </div>
-      {trailerUrl && ( // If there's a trailer available, load this component
-        <YouTube className="video_container" videoId={trailerUrl} opts={opts} />
+      {!visible ? (
+        <div></div>
+      ) : (
+        <>
+          <h2> {title} </h2>
+          <div className="row__posters">
+            {movies.map((movie) => (
+              <img
+                key={movie.id}
+                onClick={() => handleClick(movie)}
+                className={`row__poster ${isLargeRow && "row__posterLarge"}`} // if there's isLargeRow prop, apply posterLarge instead of poster_path
+                src={`${base_url}${
+                  isLargeRow ? movie.poster_path : movie.backdrop_path
+                } `}
+                alt={movie.name}
+              />
+            ))}
+          </div>
+          {trailerUrl && ( // If there's a trailer available, load this component
+            <YouTube
+              className="video_container"
+              videoId={trailerUrl}
+              opts={opts}
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -1,7 +1,13 @@
 * {
   margin: 0;
 }
+body {
+  background-color: #111;
+}
 
 .app {
   background-color: #111;
+}
+body::-webkit-scrollbar {
+  display: none; /* hide the scrollbar */
 }
